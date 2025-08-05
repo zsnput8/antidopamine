@@ -28,7 +28,7 @@ function App() {
                 <p className="text-lg md:text-xl opacity-90">Guia Prático de Foco Mental</p>
                 <div className="mt-6">
                   <a 
-                    href="https://zsn.mycartpanda.com/checkout/191739029:1" 
+                    href="https://zsn.mycartpanda.com/checkout/191739029:1"
                     target="_blank" 
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-3 bg-white text-blue-600 px-8 py-4 rounded-xl font-bold text-lg hover:bg-gray-50 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
