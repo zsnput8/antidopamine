@@ -47,8 +47,7 @@ function App() {
               </div>
             </div>
             <p className="text-lg text-gray-700 leading-relaxed">
-              Porque eu tava cansado de me sentir travado. Cansado de abrir mil abas, de querer começar e não ir até o fim. 
-              Se você sente que tá viciado em dopamina fácil e não consegue mais focar, esse material pode te ajudar.
+            Porque meu cérebro virou um TikTok ambulante. Eu pulava de aba em aba, lia 3 parágrafos e já tava pegando o celular. A real? Eu não tava burro — só tava dopado de estímulo o tempo todo. Esse ebook é o resumo do que testei pra sair desse ciclo vicioso e recuperar o controle da minha atenção. Sem mágica, só neurociência aplicada na vida real.
             </p>
           </section>
 
