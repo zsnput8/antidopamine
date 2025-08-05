@@ -47,7 +47,7 @@ function App() {
               </div>
             </div>
             <p className="text-lg text-gray-700 leading-relaxed">
-            Porque meu cérebro virou um TikTok ambulante. Eu pulava de aba em aba, lia 3 parágrafos e já tava pegando o celular. A real? Eu não tava burro — só tava dopado de estímulo o tempo todo. Esse ebook é o resumo do que testei pra sair desse ciclo vicioso e recuperar o controle da minha atenção. Sem mágica, só neurociência aplicada na vida real.
+            Porque meu cérebro virou um TikTok ambulante. Eu pulava de aba em aba, lia 3 parágrafos e já tava pegando o celular. A real? Eu não tava burro só tava dopado de estímulo o tempo todo. Esse livro é o resumo do que testei pra sair desse ciclo vicioso e recuperar o controle da minha atenção. Sem mágica, só neurociência aplicada na vida real.
             </p>
           </section>
 
@@ -64,9 +64,7 @@ function App() {
               </div>
             </div>
             <p className="text-lg text-gray-700 leading-relaxed">
-              Um guia prático sobre como a dopamina realmente funciona no cérebro. Sem enrolação. 
-              Coisas que eu testei na pele: cortes, hábitos, rotina, bloqueadores, reforço positivo, 
-              detox e como sair da montanha-russa de prazer imediato.
+          Nada que seja "mais do mesmo". Trouxe com base factual provas de que o seu cortéx pre frontal tá destruido. E pra piorar, ninguém quer que você "melhore". Te mostro o caminho que vai fazer você atingir o máximo que sua genética permitir.
             </p>
           </section>
 
@@ -96,7 +94,7 @@ function App() {
               Pronto para recuperar seu foco?
             </h3>
             <p className="text-lg opacity-90 mb-8 max-w-2xl mx-auto text-center">
-              Pare de procrastinar e comece a tomar controle da sua mente hoje mesmo.
+              Pra quem sente que tá sempre cansado mas nunca fez nada. Pra quem abre o celular “rapidinho” e perde 2 horas. Pra quem quer parar de se sabotar, mas sem papo de coach. Se você gosta de entender como sua mente funciona e aplicar isso no dia a dia, esse conteúdo vai te servir como um mapa.
             </p>
             <div className="flex justify-center">
               <a 
