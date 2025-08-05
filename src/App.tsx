@@ -10,8 +10,8 @@ function App() {
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-gray-900 mb-4 leading-tight">
             Desbloqueie sua Dopamina
           </h1>
-          <p className="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">dd
-            Escrevi esse livro inicialmente como intuito acadêmico, mas conforme o tempo
+          <p className="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
+            Comecei esse material como um projeto acadêmico, quase terapêutico. Quanto mais eu estudava sobre dopamina, mais eu entendia minhas próprias sabotagens. No fim, ficou exatamente tudo o que eu queria falar pras pessoas. Cuide de sí mesmo, sua mente é seu bem mais precioso.
           </p>
         </div>
       </header>
