@@ -26,6 +26,17 @@ function App() {
                 <Brain className="w-16 h-16 md:w-24 md:h-24 mx-auto mb-4 opacity-90" />
                 <h2 className="text-2xl md:text-4xl font-bold mb-2">Desbloqueie sua Dopamina</h2>
                 <p className="text-lg md:text-xl opacity-90">Guia Prático de Foco Mental</p>
+                <div className="mt-6">
+                  <a 
+                    href="https://zsn.mycartpanda.com/checkout/191739029:1" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-3 bg-white text-blue-600 px-8 py-4 rounded-xl font-bold text-lg hover:bg-gray-50 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
+                  >
+                    Quero ler agora
+                    <ExternalLink className="w-5 h-5" />
+                  </a>
+                </div>
               </div>
             </div>
             <div className="absolute inset-0 bg-black/10"></div>
@@ -85,29 +96,6 @@ function App() {
               Se você quer algo direto, honesto e funcional — sem papo de guru — você vai se identificar.
             </p>
           </section>
-        </div>
-
-        {/* CTA Section */}
-        <div className="mt-16">
-          <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl p-8 md:p-12 text-white shadow-2xl">
-            <h3 className="text-2xl md:text-3xl font-bold mb-4 text-center">
-              Pronto para recuperar seu foco?
-            </h3>
-            <p className="text-lg opacity-90 mb-8 max-w-2xl mx-auto text-center">
-              Pra quem sente que tá sempre cansado mas nunca fez nada. Pra quem abre o celular “rapidinho” e perde 2 horas. Pra quem quer parar de se sabotar, mas sem papo de coach. Se você gosta de entender como sua mente funciona e aplicar isso no dia a dia, esse conteúdo vai te servir como um mapa.
-            </p>
-            <div className="flex justify-center">
-              <a 
-                href="https://zsn.mycartpanda.com/checkout/191739029:1" 
-                target="_blank" 
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-3 bg-white text-blue-600 px-8 py-4 rounded-xl font-bold text-lg hover:bg-gray-50 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
-              >
-                Quero ler agora
-                <ExternalLink className="w-5 h-5" />
-              </a>
-            </div>
-          </div>
         </div>
 
         {/* Testimonials */}
