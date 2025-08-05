@@ -10,7 +10,7 @@ function App() {
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-extrabold text-gray-900 mb-4 leading-tight">
             Desbloqueie sua Dopamina
           </h1>
-          <p className="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
+          <p className="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">dd
             Escrevi esse livro inicialmente como intuito acadêmico, mas conforme o tempo
           </p>
         </div>
