@@ -11,7 +11,7 @@ function App() {
             Desbloqueie sua Dopamina
           </h1>
           <p className="text-lg md:text-xl text-gray-600 max-w-2xl mx-auto leading-relaxed">
-            Um ebook simples, direto e baseado em experiência real — sem promessas mágicas.
+            Escrevi esse livro inicialmente como intuito acadêmico, mas conforme o tempo
           </p>
         </div>
       </header>
@@ -125,14 +125,14 @@ function App() {
                   M
                 </div>
                 <div className="ml-3">
-                  <h4 className="font-semibold text-gray-900">Marcos Silva</h4>
+                  <h4 className="font-semibold text-gray-900">Notx</h4>
                   <div className="flex text-yellow-400">
                     ★★★★★
                   </div>
                 </div>
               </div>
               <p className="text-gray-700 italic">
-                "Finalmente um material que vai direto ao ponto. Consegui cortar o vício em redes sociais e meu foco melhorou muito. Recomendo!"
+                "Com certeza a parte mais dificil foi parar com a pornografia. A primeira semana sem foi tipo um inferno, não conseguia me concentrar em nada."
               </p>
             </div>
 
@@ -142,14 +142,14 @@ function App() {
                   A
                 </div>
                 <div className="ml-3">
-                  <h4 className="font-semibold text-gray-900">Ana Costa</h4>
+                  <h4 className="font-semibold text-gray-900">João B</h4>
                   <div className="flex text-yellow-400">
                     ★★★★★
                   </div>
                 </div>
               </div>
               <p className="text-gray-700 italic">
-                "Eu tava perdida com tanto conteúdo por aí. Esse ebook é diferente, prático e funciona de verdade. Mudou minha rotina completamente."
+                "Não tem mágica, é tipo um tapa na cara mesmo."
               </p>
             </div>
 
@@ -159,7 +159,7 @@ function App() {
                   R
                 </div>
                 <div className="ml-3">
-                  <h4 className="font-semibold text-gray-900">Rafael Santos</h4>
+                  <h4 className="font-semibold text-gray-900">Rafa</h4>
                   <div className="flex text-yellow-400">
                     ★★★★★
                   </div>
@@ -176,14 +176,14 @@ function App() {
                   L
                 </div>
                 <div className="ml-3">
-                  <h4 className="font-semibold text-gray-900">Larissa Oliveira</h4>
+                  <h4 className="font-semibold text-gray-900">Hashh</h4>
                   <div className="flex text-yellow-400">
                     ★★★★★
                   </div>
                 </div>
               </div>
               <p className="text-gray-700 italic">
-                "Depois de ler, consegui organizar minha mente e parar de procrastinar. O autor fala a nossa língua, sem frescura. Adorei!"
+                "Bem estruturado, organizado e coerente. Valeu os 7 pila sem duvida"
               </p>
             </div>
           </div>
