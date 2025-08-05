@@ -76,7 +76,7 @@ function App() {
               </div>
               <div>
                 <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
-                  Pra quem é esse ebook?
+                  Pra quem eu escrevi isso?
                 </h2>
               </div>
             </div>
