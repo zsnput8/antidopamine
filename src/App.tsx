@@ -20,18 +20,18 @@ function App() {
       <main className="max-w-4xl mx-auto px-6 pb-16">
         {/* Hero Image */}
         <div className="mb-16">
-          <div className="relative overflow-hidden rounded-2xl shadow-2xl bg-gradient-to-br from-blue-600 to-purple-700 aspect-[7/4]">
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="text-center text-white">
-                <Brain className="w-16 h-16 md:w-24 md:h-24 mx-auto mb-4 opacity-90" />
-                <h2 className="text-2xl md:text-4xl font-bold mb-2">Desbloqueie sua Dopamina</h2>
-                <p className="text-lg md:text-xl opacity-90">Guia Prático de Foco Mental</p>
-                <div className="mt-6">
+          <div className="relative overflow-hidden rounded-2xl shadow-2xl bg-gradient-to-br from-blue-600 to-purple-700 min-h-[400px] md:min-h-[500px]">
+            <div className="absolute inset-0 flex items-center justify-center p-6">
+              <div className="text-center text-white max-w-md mx-auto">
+                <Brain className="w-12 h-12 sm:w-16 sm:h-16 md:w-24 md:h-24 mx-auto mb-4 opacity-90" />
+                <h2 className="text-xl sm:text-2xl md:text-4xl font-bold mb-2 leading-tight">Desbloqueie sua Dopamina</h2>
+                <p className="text-base sm:text-lg md:text-xl opacity-90 mb-6">Guia Prático de Foco Mental</p>
+                <div className="mt-4">
                   <a 
                     href="https://zsn.mycartpanda.com/checkout/191739029:1"
                     target="_blank" 
                     rel="noopener noreferrer"
-                    className="inline-flex items-center gap-3 bg-white text-blue-600 px-8 py-4 rounded-xl font-bold text-lg hover:bg-gray-50 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
+                    className="inline-flex items-center gap-2 sm:gap-3 bg-white text-blue-600 px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-bold text-base sm:text-lg hover:bg-gray-50 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
                   >
                     Quero ler agora
                     <ExternalLink className="w-5 h-5" />
@@ -39,7 +39,6 @@ function App() {
                 </div>
               </div>
             </div>
-            <div className="absolute inset-0 bg-black/10 pointer-events-none"></div>
           </div>
         </div>
 
