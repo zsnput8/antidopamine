@@ -117,7 +117,7 @@ function EnemPage() {
           <h3 className="text-2xl md:text-3xl font-bold text-center mb-12 text-gray-900">
             Quem já passou conta a real
           </h3>
-          <div className="grid md:grid-cols-2 gap-6">
+          <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
             <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
               <div className="flex items-center mb-4">
                 <div className="w-12 h-12 bg-gradient-to-br from-green-500 to-blue-600 rounded-full flex items-center justify-center text-white font-bold text-lg">
@@ -149,40 +149,6 @@ function EnemPage() {
               </div>
               <p className="text-gray-700 italic">
                 "Estudei só 4 meses com esse método e passei em Medicina. O cronograma é perfeito!"
-              </p>
-            </div>
-
-            <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
-              <div className="flex items-center mb-4">
-                <div className="w-12 h-12 bg-gradient-to-br from-orange-500 to-red-600 rounded-full flex items-center justify-center text-white font-bold text-lg">
-                  P
-                </div>
-                <div className="ml-3">
-                  <h4 className="font-semibold text-gray-900">Pedro - UFRJ</h4>
-                  <div className="flex text-yellow-400">
-                    ★★★★★
-                  </div>
-                </div>
-              </div>
-              <p className="text-gray-700 italic">
-                "As estratégias de chute me salvaram. Acertei questões que nem sabia direito. Método funciona!"
-              </p>
-            </div>
-
-            <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
-              <div className="flex items-center mb-4">
-                <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-lg">
-                  M
-                </div>
-                <div className="ml-3">
-                  <h4 className="font-semibold text-gray-900">Maria - UNICAMP</h4>
-                  <div className="flex text-yellow-400">
-                    ★★★★★
-                  </div>
-                </div>
-              </div>
-              <p className="text-gray-700 italic">
-                "Direto ao ponto, sem enrolação. Exatamente o que eu precisava pra focar no que importa."
               </p>
             </div>
           </div>

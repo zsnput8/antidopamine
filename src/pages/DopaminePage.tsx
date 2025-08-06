@@ -102,7 +102,7 @@ function DopaminePage() {
           <h3 className="text-2xl md:text-3xl font-bold text-center mb-12 text-gray-900">
             O que as pessoas estão falando
           </h3>
-          <div className="grid md:grid-cols-2 gap-6">
+          <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
             <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
               <div className="flex items-center mb-4">
                 <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center text-white font-bold text-lg">
@@ -134,40 +134,6 @@ function DopaminePage() {
               </div>
               <p className="text-gray-700 italic">
                 "Sem enrolação, sem promessa mágica. Só estratégias que realmente funcionam. Finalmente entendi por que eu não conseguia me concentrar."
-              </p>
-            </div>
-
-            <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
-              <div className="flex items-center mb-4">
-                <div className="w-12 h-12 bg-gradient-to-br from-purple-500 to-pink-600 rounded-full flex items-center justify-center text-white font-bold text-lg">
-                  R
-                </div>
-                <div className="ml-3">
-                  <h4 className="font-semibold text-gray-900">Rafael Santos</h4>
-                  <div className="flex text-yellow-400">
-                    ★★★★★
-                  </div>
-                </div>
-              </div>
-              <p className="text-gray-700 italic">
-                "Material incrível! Direto ao ponto, sem enrolação. Valeu cada centavo. Minha produtividade aumentou 300%."
-              </p>
-            </div>
-
-            <div className="bg-white rounded-xl p-6 shadow-lg border border-gray-100">
-              <div className="flex items-center mb-4">
-                <div className="w-12 h-12 bg-gradient-to-br from-orange-500 to-red-600 rounded-full flex items-center justify-center text-white font-bold text-lg">
-                  L
-                </div>
-                <div className="ml-3">
-                  <h4 className="font-semibold text-gray-900">Larissa Oliveira</h4>
-                  <div className="flex text-yellow-400">
-                    ★★★★★
-                  </div>
-                </div>
-              </div>
-              <p className="text-gray-700 italic">
-                "Consegui organizar minha mente e parar de procrastinar. O conteúdo é gold, sério. Recomendo demais!"
               </p>
             </div>
           </div>
