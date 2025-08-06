@@ -174,6 +174,27 @@ function DopaminePage() {
         </div>
       </main>
 
+      {/* Outros Projetos */}
+      <section className="bg-white border-t border-gray-200 py-16 px-6">
+        <div className="max-w-4xl mx-auto text-center">
+          <h3 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
+            Outros Projetos
+          </h3>
+          <p className="text-lg text-gray-600 mb-8 max-w-2xl mx-auto">
+            Confira outros materiais que podem te ajudar a alcançar seus objetivos
+          </p>
+          <div className="flex justify-center">
+            <a 
+              href="/enem"
+              className="inline-flex items-center gap-3 bg-gradient-to-r from-green-600 to-blue-600 text-white px-8 py-4 rounded-xl font-bold text-lg hover:from-green-700 hover:to-blue-700 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
+            >
+              ENEM na Veia
+              <ExternalLink className="w-5 h-5" />
+            </a>
+          </div>
+        </div>
+      </section>
+
       {/* Footer */}
       <footer className="text-center py-12 px-6 border-t border-gray-200 bg-white">
         <p className="text-gray-500">
