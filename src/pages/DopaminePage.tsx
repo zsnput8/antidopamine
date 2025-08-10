@@ -116,7 +116,7 @@ function DopaminePage() {
                 </div>
               </div>
               <p className="text-gray-700 italic">
-                "N"
+                "Eu tava viciado no instagram e tiktok e nem percebia. A procrastinação tinha dominado minha vida."
               </p>
             </div>
 
