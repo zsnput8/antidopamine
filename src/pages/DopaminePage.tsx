@@ -116,7 +116,7 @@ function DopaminePage() {
                 </div>
               </div>
               <p className="text-gray-700 italic">
-                "Cara, eu tava viciado em Instagram e TikTok. Depois de aplicar as técnicas do ebook, consegui focar 3 horas seguidas estudando. Mudou minha vida!"
+                "N"
               </p>
             </div>
 
