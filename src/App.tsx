@@ -7,13 +7,19 @@ interface Post {
   content: string;
   date: string;
   author: string;
+  isVerified?: boolean;
 }
 
 function App() {
   const [posts, setPosts] = useState<Post[]>([]);
   const [isWriting, setIsWriting] = useState(false);
   const [editingPost, setEditingPost] = useState<Post | null>(null);
-  const [newPost, setNewPost] = useState({ title: '', content: '', author: 'Anonymous' });
+  const [newPost, setNewPost] = useState({ title: '', content: '', author: 'Anonymous', isVerified: false });
+  const [adminPassword, setAdminPassword] = useState('');
+  const [isAdminMode, setIsAdminMode] = useState(false);
+
+  // Simple admin password (in a real app, this would be more secure)
+  const ADMIN_PASSWORD = 'admin123';
 
   // Load posts from localStorage on component mount
   useEffect(() => {
@@ -36,7 +42,7 @@ function App() {
       // Update existing post
       setPosts(posts.map(post => 
         post.id === editingPost.id 
-          ? { ...editingPost, ...newPost, date: new Date().toLocaleDateString('en-US') }
+          ? { ...editingPost, ...newPost, date: new Date().toLocaleDateString('en-US'), isVerified: newPost.isVerified }
           : post
       ));
       setEditingPost(null);
@@ -45,18 +51,19 @@ function App() {
       const post: Post = {
         id: Date.now().toString(),
         ...newPost,
-        date: new Date().toLocaleDateString('en-US')
+        date: new Date().toLocaleDateString('en-US'),
+        isVerified: newPost.isVerified
       };
       setPosts([post, ...posts]);
     }
 
-    setNewPost({ title: '', content: '', author: 'Anonymous' });
+    setNewPost({ title: '', content: '', author: 'Anonymous', isVerified: false });
     setIsWriting(false);
   };
 
   const handleEdit = (post: Post) => {
     setEditingPost(post);
-    setNewPost({ title: post.title, content: post.content, author: post.author });
+    setNewPost({ title: post.title, content: post.content, author: post.author, isVerified: post.isVerified || false });
     setIsWriting(true);
   };
 
@@ -69,7 +76,21 @@ function App() {
   const cancelEdit = () => {
     setIsWriting(false);
     setEditingPost(null);
-    setNewPost({ title: '', content: '', author: 'Anonymous' });
+    setNewPost({ title: '', content: '', author: 'Anonymous', isVerified: false });
+  };
+
+  const handleAdminLogin = () => {
+    if (adminPassword === ADMIN_PASSWORD) {
+      setIsAdminMode(true);
+      setAdminPassword('');
+    } else {
+      alert('Wrong password');
+    }
+  };
+
+  const handleAdminLogout = () => {
+    setIsAdminMode(false);
+    setNewPost({ ...newPost, isVerified: false });
   };
 
   return (
@@ -79,20 +100,50 @@ function App() {
         <div className="max-w-4xl mx-auto px-6 py-8">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-3xl md:text-4xl font-bold text-green-400">
+              <h1 className="text-3xl md:text-4xl font-bold text-green-400 flex items-center gap-3">
                 The Stream of Consciousness Dump
+                {isAdminMode && (
+                  <span className="text-sm bg-green-600 text-white px-2 py-1 rounded-full">ADMIN</span>
+                )}
               </h1>
               <p className="text-gray-400 mt-2">
                 anonymous thoughts, raw perspectives, unfiltered worldviews
               </p>
             </div>
-            <button
-              onClick={() => setIsWriting(!isWriting)}
-              className="flex items-center gap-2 bg-green-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-green-700 transition-colors"
-            >
-              <PlusCircle className="w-5 h-5" />
-              {isWriting ? 'Cancel' : 'New Post'}
-            </button>
+            <div className="flex items-center gap-4">
+              {!isAdminMode ? (
+                <div className="flex items-center gap-2">
+                  <input
+                    type="password"
+                    value={adminPassword}
+                    onChange={(e) => setAdminPassword(e.target.value)}
+                    placeholder="Admin password"
+                    className="px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-sm text-gray-100"
+                    onKeyPress={(e) => e.key === 'Enter' && handleAdminLogin()}
+                  />
+                  <button
+                    onClick={handleAdminLogin}
+                    className="bg-gray-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-gray-700 transition-colors"
+                  >
+                    Login
+                  </button>
+                </div>
+              ) : (
+                <button
+                  onClick={handleAdminLogout}
+                  className="bg-red-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-red-700 transition-colors"
+                >
+                  Logout
+                </button>
+              )}
+              <button
+                onClick={() => setIsWriting(!isWriting)}
+                className="flex items-center gap-2 bg-green-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-green-700 transition-colors"
+              >
+                <PlusCircle className="w-5 h-5" />
+                {isWriting ? 'Cancel' : 'New Post'}
+              </button>
+            </div>
           </div>
         </div>
       </header>
@@ -117,6 +168,20 @@ function App() {
                   placeholder="Your name or stay Anonymous"
                 />
               </div>
+              {isAdminMode && (
+                <div className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    id="verified"
+                    checked={newPost.isVerified}
+                    onChange={(e) => setNewPost({ ...newPost, isVerified: e.target.checked })}
+                    className="w-4 h-4 text-green-600 bg-gray-700 border-gray-600 rounded focus:ring-green-500"
+                  />
+                  <label htmlFor="verified" className="text-sm font-medium text-gray-300">
+                    Post as verified admin
+                  </label>
+                </div>
+              )}
               <div>
                 <label className="block text-sm font-medium text-gray-300 mb-2">
                   Title
@@ -190,7 +255,14 @@ function App() {
                     <div className="flex items-center gap-4 text-sm text-gray-400">
                       <div className="flex items-center gap-1">
                         <User className="w-4 h-4" />
-                        {post.author}
+                        <span className="flex items-center gap-2">
+                          {post.author}
+                          {post.isVerified && (
+                            <span className="bg-green-600 text-white text-xs px-2 py-0.5 rounded-full font-medium">
+                              ✓ VERIFIED
+                            </span>
+                          )}
+                        </span>
                       </div>
                       <div className="flex items-center gap-1">
                         <Calendar className="w-4 h-4" />
