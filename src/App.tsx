@@ -229,7 +229,7 @@ function App() {
       {/* Footer */}
       <footer className="text-center py-12 px-6 border-t border-gray-700 bg-gray-800 mt-16">
         <p className="text-gray-400">
-          speak freely, think deeply
+          a place to stimulate your introspective thoughts
         </p>
       </footer>
     </div>
