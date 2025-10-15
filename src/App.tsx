@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { PlusCircle, Edit3, Trash2, Calendar, User } from 'lucide-react';
+import { PlusCircle, CreditCard as Edit3, Trash2, Calendar, User } from 'lucide-react';
 
 interface Post {
   id: string;
