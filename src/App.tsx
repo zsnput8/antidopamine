@@ -259,7 +259,7 @@ function App() {
                           {post.author}
                           {post.isVerified && (
                             <span className="bg-green-600 text-white text-xs px-2 py-0.5 rounded-full font-medium">
-                              ✓ VERIFIED
+                              zsn
                             </span>
                           )}
                         </span>
