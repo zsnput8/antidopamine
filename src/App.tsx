@@ -229,7 +229,7 @@ function App() {
       {/* Footer */}
       <footer className="text-center py-12 px-6 border-t border-gray-200 bg-white mt-16">
         <p className="text-gray-500">
-          &copy; 2025 ProjectSZN - Blog Pessoal
+          &copy; myideas
         </p>
       </footer>
     </div>
