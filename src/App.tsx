@@ -80,7 +80,7 @@ function App() {
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-3xl md:text-4xl font-bold text-green-400">
-                fale sobre oq vc quiser
+                The Stream of Consciousness Dump
               </h1>
               <p className="text-gray-400 mt-2">
                 anonymous thoughts, raw perspectives, unfiltered worldviews
