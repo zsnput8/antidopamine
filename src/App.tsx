@@ -80,10 +80,10 @@ function App() {
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-3xl md:text-4xl font-bold text-gray-900">
-                Meu Blog Pessoal
+                my feelking
               </h1>
               <p className="text-gray-600 mt-2">
-                Pensamentos, ideias e reflexões
+                trying to talk  about what i see in this world
               </p>
             </div>
             <button
