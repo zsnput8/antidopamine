@@ -101,6 +101,11 @@ function App() {
   };
 
   const handleDelete = async (id: string) => {
+    if (!isAdminMode) {
+      alert('Only admins can delete posts');
+      return;
+    }
+
     if (confirm('Are you sure you want to delete this post?')) {
       try {
         const { error } = await supabase
@@ -113,7 +118,7 @@ function App() {
           return;
         }
 
-        loadPosts(); // Reload posts after deleting
+        loadPosts();
       } catch (error) {
         console.error('Error deleting post:', error);
       }
@@ -333,13 +338,15 @@ function App() {
                     >
                       <Edit3 className="w-5 h-5" />
                     </button>
-                    <button
-                      onClick={() => handleDelete(post.id)}
-                      className="p-2 text-gray-400 hover:text-red-400 hover:bg-gray-700 rounded-lg transition-colors"
-                      title="Delete post"
-                    >
-                      <Trash2 className="w-5 h-5" />
-                    </button>
+                    {isAdminMode && (
+                      <button
+                        onClick={() => handleDelete(post.id)}
+                        className="p-2 text-gray-400 hover:text-red-400 hover:bg-gray-700 rounded-lg transition-colors"
+                        title="Delete post"
+                      >
+                        <Trash2 className="w-5 h-5" />
+                      </button>
+                    )}
                   </div>
                 </div>
                 <div className="prose max-w-none">
