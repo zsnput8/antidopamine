@@ -1,82 +1,129 @@
 import React, { useState, useEffect } from 'react';
 import { PlusCircle, CreditCard as Edit3, Trash2, Calendar, User } from 'lucide-react';
-
-interface Post {
-  id: string;
-  title: string;
-  content: string;
-  date: string;
-  author: string;
-  isVerified?: boolean;
-}
+import { supabase, type Post } from './lib/supabase';
 
 function App() {
   const [posts, setPosts] = useState<Post[]>([]);
   const [isWriting, setIsWriting] = useState(false);
   const [editingPost, setEditingPost] = useState<Post | null>(null);
-  const [newPost, setNewPost] = useState({ title: '', content: '', author: 'Anonymous', isVerified: false });
+  const [newPost, setNewPost] = useState({ title: '', content: '', author: 'Anonymous', is_verified: false });
   const [adminPassword, setAdminPassword] = useState('');
   const [isAdminMode, setIsAdminMode] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   // Simple admin password (in a real app, this would be more secure)
   const ADMIN_PASSWORD = 'admin123';
 
-  // Load posts from localStorage on component mount
+  // Load posts from Supabase on component mount
   useEffect(() => {
-    const savedPosts = localStorage.getItem('blog-posts');
-    if (savedPosts) {
-      setPosts(JSON.parse(savedPosts));
-    }
+    loadPosts();
   }, []);
 
-  // Save posts to localStorage whenever posts change
-  useEffect(() => {
-    localStorage.setItem('blog-posts', JSON.stringify(posts));
-  }, [posts]);
+  const loadPosts = async () => {
+    try {
+      setLoading(true);
+      const { data, error } = await supabase
+        .from('posts')
+        .select('*')
+        .order('created_at', { ascending: false });
 
-  const handleSubmit = (e: React.FormEvent) => {
+      if (error) {
+        console.error('Error loading posts:', error);
+        return;
+      }
+
+      setPosts(data || []);
+    } catch (error) {
+      console.error('Error loading posts:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newPost.title.trim() || !newPost.content.trim()) return;
 
-    if (editingPost) {
-      // Update existing post
-      setPosts(posts.map(post => 
-        post.id === editingPost.id 
-          ? { ...editingPost, ...newPost, date: new Date().toLocaleDateString('en-US'), isVerified: newPost.isVerified }
-          : post
-      ));
-      setEditingPost(null);
-    } else {
-      // Create new post
-      const post: Post = {
-        id: Date.now().toString(),
-        ...newPost,
-        date: new Date().toLocaleDateString('en-US'),
-        isVerified: newPost.isVerified
-      };
-      setPosts([post, ...posts]);
-    }
+    try {
+      if (editingPost) {
+        // Update existing post
+        const { error } = await supabase
+          .from('posts')
+          .update({
+            title: newPost.title,
+            content: newPost.content,
+            author: newPost.author,
+            is_verified: newPost.is_verified,
+            updated_at: new Date().toISOString()
+          })
+          .eq('id', editingPost.id);
 
-    setNewPost({ title: '', content: '', author: 'Anonymous', isVerified: false });
-    setIsWriting(false);
+        if (error) {
+          console.error('Error updating post:', error);
+          return;
+        }
+
+        setEditingPost(null);
+      } else {
+        // Create new post
+        const { error } = await supabase
+          .from('posts')
+          .insert([{
+            title: newPost.title,
+            content: newPost.content,
+            author: newPost.author,
+            is_verified: newPost.is_verified
+          }]);
+
+        if (error) {
+          console.error('Error creating post:', error);
+          return;
+        }
+      }
+
+      setNewPost({ title: '', content: '', author: 'Anonymous', is_verified: false });
+      setIsWriting(false);
+      loadPosts(); // Reload posts after creating/updating
+    } catch (error) {
+      console.error('Error saving post:', error);
+    }
   };
 
   const handleEdit = (post: Post) => {
     setEditingPost(post);
-    setNewPost({ title: post.title, content: post.content, author: post.author, isVerified: post.isVerified || false });
+    setNewPost({ 
+      title: post.title, 
+      content: post.content, 
+      author: post.author, 
+      is_verified: post.is_verified || false 
+    });
     setIsWriting(true);
   };
 
-  const handleDelete = (id: string) => {
+  const handleDelete = async (id: string) => {
     if (confirm('Are you sure you want to delete this post?')) {
-      setPosts(posts.filter(post => post.id !== id));
+      try {
+        const { error } = await supabase
+          .from('posts')
+          .delete()
+          .eq('id', id);
+
+        if (error) {
+          console.error('Error deleting post:', error);
+          return;
+        }
+
+        loadPosts(); // Reload posts after deleting
+      } catch (error) {
+        console.error('Error deleting post:', error);
+      }
     }
   };
 
   const cancelEdit = () => {
     setIsWriting(false);
     setEditingPost(null);
-    setNewPost({ title: '', content: '', author: 'Anonymous', isVerified: false });
+    setNewPost({ title: '', content: '', author: 'Anonymous', is_verified: false });
   };
 
   const handleAdminLogin = () => {
@@ -90,7 +137,11 @@ function App() {
 
   const handleAdminLogout = () => {
     setIsAdminMode(false);
-    setNewPost({ ...newPost, isVerified: false });
+    setNewPost({ ...newPost, is_verified: false });
+  };
+
+  const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString('en-US');
   };
 
   return (
@@ -173,8 +224,8 @@ function App() {
                   <input
                     type="checkbox"
                     id="verified"
-                    checked={newPost.isVerified}
-                    onChange={(e) => setNewPost({ ...newPost, isVerified: e.target.checked })}
+                    checked={newPost.is_verified}
+                    onChange={(e) => setNewPost({ ...newPost, is_verified: e.target.checked })}
                     className="w-4 h-4 text-green-600 bg-gray-700 border-gray-600 rounded focus:ring-green-500"
                   />
                   <label htmlFor="verified" className="text-sm font-medium text-gray-300">
@@ -229,7 +280,11 @@ function App() {
 
         {/* Posts List */}
         <div className="space-y-8">
-          {posts.length === 0 ? (
+          {loading ? (
+            <div className="text-center py-16">
+              <div className="text-gray-400">Loading posts...</div>
+            </div>
+          ) : posts.length === 0 ? (
             <div className="text-center py-16">
               <div className="text-gray-500 mb-4">
                 <Edit3 className="w-16 h-16 mx-auto" />
@@ -257,16 +312,16 @@ function App() {
                         <User className="w-4 h-4" />
                         <span className="flex items-center gap-2">
                           {post.author}
-                          {post.isVerified && (
+                          {post.is_verified && (
                             <span className="bg-green-600 text-white text-xs px-2 py-0.5 rounded-full font-medium">
-                              zsn
+                              ✓ VERIFIED
                             </span>
                           )}
                         </span>
                       </div>
                       <div className="flex items-center gap-1">
                         <Calendar className="w-4 h-4" />
-                        {post.date}
+                        {formatDate(post.created_at)}
                       </div>
                     </div>
                   </div>
