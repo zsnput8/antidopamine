@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { PlusCircle, CreditCard as Edit3, Trash2, Calendar, User } from 'lucide-react';
+import { PlusCircle, CreditCard as Edit3, Trash2, Calendar, User, Search } from 'lucide-react';
 import { supabase, type Post } from './lib/supabase';
+import { PostDetail } from './components/PostDetail';
 
 function App() {
   const [posts, setPosts] = useState<Post[]>([]);
@@ -10,6 +11,8 @@ function App() {
   const [adminPassword, setAdminPassword] = useState('');
   const [isAdminMode, setIsAdminMode] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [selectedPost, setSelectedPost] = useState<Post | null>(null);
+  const [searchQuery, setSearchQuery] = useState('');
 
   // Simple admin password (in a real app, this would be more secure)
   const ADMIN_PASSWORD = 'admin123';
@@ -90,12 +93,16 @@ function App() {
   };
 
   const handleEdit = (post: Post) => {
+    if (!isAdminMode) {
+      alert('Only admins can edit posts');
+      return;
+    }
     setEditingPost(post);
-    setNewPost({ 
-      title: post.title, 
-      content: post.content, 
-      author: post.author, 
-      is_verified: post.is_verified || false 
+    setNewPost({
+      title: post.title,
+      content: post.content,
+      author: post.author,
+      is_verified: post.is_verified || false
     });
     setIsWriting(true);
   };
@@ -149,6 +156,15 @@ function App() {
     return new Date(dateString).toLocaleDateString('en-US');
   };
 
+  const filteredPosts = posts.filter(post => {
+    const query = searchQuery.toLowerCase();
+    return (
+      post.title.toLowerCase().includes(query) ||
+      post.content.toLowerCase().includes(query) ||
+      post.author.toLowerCase().includes(query)
+    );
+  });
+
   return (
     <div className="min-h-screen bg-gray-900 font-['Inter'] text-gray-100">
       {/* Header */}
@@ -167,6 +183,16 @@ function App() {
               </p>
             </div>
             <div className="flex items-center gap-4">
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  placeholder="Search posts..."
+                  className="pl-10 pr-4 py-2 bg-gray-700 border border-gray-600 rounded-lg text-sm text-gray-100 w-64"
+                />
+              </div>
               {!isAdminMode ? (
                 <div className="flex items-center gap-2">
                   <input
@@ -302,10 +328,11 @@ function App() {
               </p>
             </div>
           ) : (
-            posts.map((post) => (
+            filteredPosts.map((post) => (
               <article
                 key={post.id}
-                className="bg-gray-800 rounded-xl shadow-lg border border-gray-700 p-8 hover:shadow-xl transition-shadow"
+                onClick={() => setSelectedPost(post)}
+                className="bg-gray-800 rounded-xl shadow-lg border border-gray-700 p-8 hover:shadow-xl transition-shadow cursor-pointer"
               >
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex-1">
@@ -330,15 +357,15 @@ function App() {
                       </div>
                     </div>
                   </div>
-                  <div className="flex gap-2 ml-4">
-                    <button
-                      onClick={() => handleEdit(post)}
-                      className="p-2 text-gray-400 hover:text-green-400 hover:bg-gray-700 rounded-lg transition-colors"
-                      title="Edit post"
-                    >
-                      <Edit3 className="w-5 h-5" />
-                    </button>
-                    {isAdminMode && (
+                  {isAdminMode && (
+                    <div className="flex gap-2 ml-4">
+                      <button
+                        onClick={() => handleEdit(post)}
+                        className="p-2 text-gray-400 hover:text-green-400 hover:bg-gray-700 rounded-lg transition-colors"
+                        title="Edit post"
+                      >
+                        <Edit3 className="w-5 h-5" />
+                      </button>
                       <button
                         onClick={() => handleDelete(post.id)}
                         className="p-2 text-gray-400 hover:text-red-400 hover:bg-gray-700 rounded-lg transition-colors"
@@ -346,8 +373,8 @@ function App() {
                       >
                         <Trash2 className="w-5 h-5" />
                       </button>
-                    )}
-                  </div>
+                    </div>
+                  )}
                 </div>
                 <div className="prose max-w-none">
                   <div className="text-gray-300 leading-relaxed whitespace-pre-wrap">
@@ -366,6 +393,14 @@ function App() {
           a place to stimulate your introspective thoughts
         </p>
       </footer>
+
+      {selectedPost && (
+        <PostDetail
+          post={selectedPost}
+          onClose={() => setSelectedPost(null)}
+          isAdminMode={isAdminMode}
+        />
+      )}
     </div>
   );
 }
