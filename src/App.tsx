@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { PlusCircle, CreditCard as Edit3, Trash2, Calendar, User, Search } from 'lucide-react';
+import { PlusCircle, CreditCard as Edit3, Trash2, Calendar, User, Search, AlertTriangle } from 'lucide-react';
 import { supabase, type Post } from './lib/supabase';
 import { PostDetail } from './components/PostDetail';
+import { checkRateLimit, recordLoginAttempt } from './utils/rateLimit';
 
 function App() {
   const [posts, setPosts] = useState<Post[]>([]);
@@ -13,9 +14,11 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [selectedPost, setSelectedPost] = useState<Post | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
+  const [loginError, setLoginError] = useState('');
+  const [isLoggingIn, setIsLoggingIn] = useState(false);
+  const [rateLimitInfo, setRateLimitInfo] = useState<string>('');
 
-  // Simple admin password (in a real app, this would be more secure)
-  const ADMIN_PASSWORD = 'admin123';
+  const ADMIN_PASSWORD = 'aNCxap@YVchw1C0V!TzH#UfQQ6z4hG';
 
   // Load posts from Supabase on component mount
   useEffect(() => {
@@ -138,18 +141,45 @@ function App() {
     setNewPost({ title: '', content: '', author: 'Anonymous', is_verified: false });
   };
 
-  const handleAdminLogin = () => {
+  const handleAdminLogin = async () => {
+    setLoginError('');
+    setRateLimitInfo('');
+
+    const rateLimitCheck = await checkRateLimit();
+
+    if (!rateLimitCheck.allowed) {
+      setLoginError(rateLimitCheck.reason || 'Too many attempts. Please try again later.');
+      return;
+    }
+
+    if (rateLimitCheck.waitTime && rateLimitCheck.waitTime > 0) {
+      setIsLoggingIn(true);
+      setRateLimitInfo(`Please wait ${rateLimitCheck.waitTime / 1000} seconds...`);
+
+      await new Promise(resolve => setTimeout(resolve, rateLimitCheck.waitTime));
+
+      setIsLoggingIn(false);
+      setRateLimitInfo('');
+    }
+
     if (adminPassword === ADMIN_PASSWORD) {
+      await recordLoginAttempt(true);
       setIsAdminMode(true);
       setAdminPassword('');
+      setLoginError('');
     } else {
-      alert('Wrong password');
+      await recordLoginAttempt(false);
+      const remaining = (rateLimitCheck.remainingAttempts || 1) - 1;
+      setLoginError(`Wrong password. ${remaining} attempts remaining before lockout.`);
+      setAdminPassword('');
     }
   };
 
   const handleAdminLogout = () => {
     setIsAdminMode(false);
     setNewPost({ ...newPost, is_verified: false });
+    setLoginError('');
+    setRateLimitInfo('');
   };
 
   const formatDate = (dateString: string) => {
@@ -194,21 +224,31 @@ function App() {
                 />
               </div>
               {!isAdminMode ? (
-                <div className="flex items-center gap-2">
-                  <input
-                    type="password"
-                    value={adminPassword}
-                    onChange={(e) => setAdminPassword(e.target.value)}
-                    placeholder="Admin password"
-                    className="px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-sm text-gray-100"
-                    onKeyPress={(e) => e.key === 'Enter' && handleAdminLogin()}
-                  />
-                  <button
-                    onClick={handleAdminLogin}
-                    className="bg-gray-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-gray-700 transition-colors"
-                  >
-                    Login
-                  </button>
+                <div className="flex flex-col items-end gap-2">
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="password"
+                      value={adminPassword}
+                      onChange={(e) => setAdminPassword(e.target.value)}
+                      placeholder="Admin password"
+                      className="px-3 py-2 bg-gray-700 border border-gray-600 rounded-lg text-sm text-gray-100"
+                      onKeyPress={(e) => e.key === 'Enter' && !isLoggingIn && handleAdminLogin()}
+                      disabled={isLoggingIn}
+                    />
+                    <button
+                      onClick={handleAdminLogin}
+                      disabled={isLoggingIn}
+                      className="bg-gray-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-gray-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      {isLoggingIn ? 'Wait...' : 'Login'}
+                    </button>
+                  </div>
+                  {(loginError || rateLimitInfo) && (
+                    <div className={`flex items-center gap-1 text-xs ${loginError ? 'text-red-400' : 'text-yellow-400'}`}>
+                      <AlertTriangle className="w-3 h-3" />
+                      <span>{loginError || rateLimitInfo}</span>
+                    </div>
+                  )}
                 </div>
               ) : (
                 <button
