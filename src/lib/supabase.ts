@@ -11,6 +11,7 @@ export type Post = {
   content: string
   author: string
   is_verified: boolean
+  post_type: 'admin_only' | 'public'
   created_at: string
   updated_at: string
 }

@@ -8,7 +8,8 @@ function App() {
   const [posts, setPosts] = useState<Post[]>([]);
   const [isWriting, setIsWriting] = useState(false);
   const [editingPost, setEditingPost] = useState<Post | null>(null);
-  const [newPost, setNewPost] = useState({ title: '', content: '', author: 'Anonymous', is_verified: false });
+  const [newPost, setNewPost] = useState({ title: '', content: '', author: 'Anonymous', is_verified: false, post_type: 'public' as 'admin_only' | 'public' });
+  const [activeTab, setActiveTab] = useState<'admin' | 'public'>('admin');
   const [adminPassword, setAdminPassword] = useState('');
   const [isAdminMode, setIsAdminMode] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -78,7 +79,8 @@ function App() {
             title: newPost.title,
             content: newPost.content,
             author: newPost.author,
-            is_verified: newPost.is_verified
+            is_verified: newPost.is_verified,
+            post_type: newPost.post_type
           }]);
 
         if (error) {
@@ -87,7 +89,7 @@ function App() {
         }
       }
 
-      setNewPost({ title: '', content: '', author: 'Anonymous', is_verified: false });
+      setNewPost({ title: '', content: '', author: 'Anonymous', is_verified: false, post_type: 'public' });
       setIsWriting(false);
       loadPosts(); // Reload posts after creating/updating
     } catch (error) {
@@ -105,7 +107,8 @@ function App() {
       title: post.title,
       content: post.content,
       author: post.author,
-      is_verified: post.is_verified || false
+      is_verified: post.is_verified || false,
+      post_type: post.post_type
     });
     setIsWriting(true);
   };
@@ -138,7 +141,7 @@ function App() {
   const cancelEdit = () => {
     setIsWriting(false);
     setEditingPost(null);
-    setNewPost({ title: '', content: '', author: 'Anonymous', is_verified: false });
+    setNewPost({ title: '', content: '', author: 'Anonymous', is_verified: false, post_type: 'public' });
   };
 
   const handleAdminLogin = async () => {
@@ -177,7 +180,7 @@ function App() {
 
   const handleAdminLogout = () => {
     setIsAdminMode(false);
-    setNewPost({ ...newPost, is_verified: false });
+    setNewPost({ ...newPost, is_verified: false, post_type: 'public' });
     setLoginError('');
     setRateLimitInfo('');
   };
@@ -186,7 +189,19 @@ function App() {
     return new Date(dateString).toLocaleDateString('en-US');
   };
 
-  const filteredPosts = posts.filter(post => {
+  const adminPosts = posts.filter(post => post.post_type === 'admin_only');
+  const publicPosts = posts.filter(post => post.post_type === 'public');
+
+  const filteredAdminPosts = adminPosts.filter(post => {
+    const query = searchQuery.toLowerCase();
+    return (
+      post.title.toLowerCase().includes(query) ||
+      post.content.toLowerCase().includes(query) ||
+      post.author.toLowerCase().includes(query)
+    );
+  });
+
+  const filteredPublicPosts = publicPosts.filter(post => {
     const query = searchQuery.toLowerCase();
     return (
       post.title.toLowerCase().includes(query) ||
@@ -291,18 +306,33 @@ function App() {
                 />
               </div>
               {isAdminMode && (
-                <div className="flex items-center gap-2">
-                  <input
-                    type="checkbox"
-                    id="verified"
-                    checked={newPost.is_verified}
-                    onChange={(e) => setNewPost({ ...newPost, is_verified: e.target.checked })}
-                    className="w-4 h-4 text-green-600 bg-gray-700 border-gray-600 rounded focus:ring-green-500"
-                  />
-                  <label htmlFor="verified" className="text-sm font-medium text-gray-300">
-                    Post as verified admin
-                  </label>
-                </div>
+                <>
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="checkbox"
+                      id="verified"
+                      checked={newPost.is_verified}
+                      onChange={(e) => setNewPost({ ...newPost, is_verified: e.target.checked })}
+                      className="w-4 h-4 text-green-600 bg-gray-700 border-gray-600 rounded focus:ring-green-500"
+                    />
+                    <label htmlFor="verified" className="text-sm font-medium text-gray-300">
+                      Post as verified admin
+                    </label>
+                  </div>
+                  <div>
+                    <label className="block text-sm font-medium text-gray-300 mb-2">
+                      Post Type
+                    </label>
+                    <select
+                      value={newPost.post_type}
+                      onChange={(e) => setNewPost({ ...newPost, post_type: e.target.value as 'admin_only' | 'public' })}
+                      className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent text-gray-100"
+                    >
+                      <option value="public">Public Post (anyone can post)</option>
+                      <option value="admin_only">Admin Announcement (admin only)</option>
+                    </select>
+                  </div>
+                </>
               )}
               <div>
                 <label className="block text-sm font-medium text-gray-300 mb-2">
@@ -349,6 +379,30 @@ function App() {
           </div>
         )}
 
+        {/* Tab Navigation */}
+        <div className="flex gap-4 mb-8 border-b border-gray-700">
+          <button
+            onClick={() => setActiveTab('admin')}
+            className={`px-6 py-3 font-medium transition-colors ${
+              activeTab === 'admin'
+                ? 'text-green-400 border-b-2 border-green-400'
+                : 'text-gray-400 hover:text-gray-300'
+            }`}
+          >
+            Admin Announcements ({adminPosts.length})
+          </button>
+          <button
+            onClick={() => setActiveTab('public')}
+            className={`px-6 py-3 font-medium transition-colors ${
+              activeTab === 'public'
+                ? 'text-green-400 border-b-2 border-green-400'
+                : 'text-gray-400 hover:text-gray-300'
+            }`}
+          >
+            Public Posts ({publicPosts.length})
+          </button>
+        </div>
+
         {/* Posts List */}
         <div className="space-y-8">
           {loading ? (
@@ -368,7 +422,7 @@ function App() {
               </p>
             </div>
           ) : (
-            filteredPosts.map((post) => (
+            (activeTab === 'admin' ? filteredAdminPosts : filteredPublicPosts).map((post) => (
               <article
                 key={post.id}
                 onClick={() => setSelectedPost(post)}
@@ -400,14 +454,20 @@ function App() {
                   {isAdminMode && (
                     <div className="flex gap-2 ml-4">
                       <button
-                        onClick={() => handleEdit(post)}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleEdit(post);
+                        }}
                         className="p-2 text-gray-400 hover:text-green-400 hover:bg-gray-700 rounded-lg transition-colors"
                         title="Edit post"
                       >
                         <Edit3 className="w-5 h-5" />
                       </button>
                       <button
-                        onClick={() => handleDelete(post.id)}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleDelete(post.id);
+                        }}
                         className="p-2 text-gray-400 hover:text-red-400 hover:bg-gray-700 rounded-lg transition-colors"
                         title="Delete post"
                       >
