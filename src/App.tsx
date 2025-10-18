@@ -389,7 +389,7 @@ function App() {
                 : 'text-gray-400 hover:text-gray-300'
             }`}
           >
-            Admin Announcements ({adminPosts.length})
+            Admin Posts ({adminPosts.length})
           </button>
           <button
             onClick={() => setActiveTab('public')}
