@@ -3,6 +3,7 @@ import { PlusCircle, CreditCard as Edit3, Trash2, Calendar, User, Search, AlertT
 import { supabase, type Post } from './lib/supabase';
 import { PostDetail } from './components/PostDetail';
 import { checkRateLimit, recordLoginAttempt } from './utils/rateLimit';
+import { validatePostTitle, validatePostContent, validateAuthorName, detectXSSAttempt, detectSQLInjection, encodeForHTML } from './utils/security';
 
 function App() {
   const [posts, setPosts] = useState<Post[]>([]);
@@ -51,15 +52,44 @@ function App() {
     e.preventDefault();
     if (!newPost.title.trim() || !newPost.content.trim()) return;
 
+    if (!validatePostTitle(newPost.title)) {
+      alert('Invalid title. Must be between 1 and 200 characters.');
+      return;
+    }
+
+    if (!validatePostContent(newPost.content)) {
+      alert('Invalid content. Must be between 1 and 50000 characters.');
+      return;
+    }
+
+    if (!validateAuthorName(newPost.author)) {
+      alert('Invalid author name. Must be between 1 and 100 characters.');
+      return;
+    }
+
+    if (detectXSSAttempt(newPost.title) || detectXSSAttempt(newPost.content) || detectXSSAttempt(newPost.author)) {
+      alert('Invalid input detected. Please remove any HTML or scripts.');
+      return;
+    }
+
+    if (detectSQLInjection(newPost.title) || detectSQLInjection(newPost.content) || detectSQLInjection(newPost.author)) {
+      alert('Invalid input detected. Please use safe characters only.');
+      return;
+    }
+
+    if (newPost.post_type === 'admin_only' && !isAdminMode) {
+      alert('Only admins can create admin announcements.');
+      return;
+    }
+
     try {
       if (editingPost) {
-        // Update existing post
         const { error } = await supabase
           .from('posts')
           .update({
-            title: newPost.title,
-            content: newPost.content,
-            author: newPost.author,
+            title: encodeForHTML(newPost.title),
+            content: encodeForHTML(newPost.content),
+            author: encodeForHTML(newPost.author),
             is_verified: newPost.is_verified,
             updated_at: new Date().toISOString()
           })
@@ -72,13 +102,12 @@ function App() {
 
         setEditingPost(null);
       } else {
-        // Create new post
         const { error } = await supabase
           .from('posts')
           .insert([{
-            title: newPost.title,
-            content: newPost.content,
-            author: newPost.author,
+            title: encodeForHTML(newPost.title),
+            content: encodeForHTML(newPost.content),
+            author: encodeForHTML(newPost.author),
             is_verified: newPost.is_verified,
             post_type: newPost.post_type
           }]);
@@ -91,7 +120,7 @@ function App() {
 
       setNewPost({ title: '', content: '', author: 'Anonymous', is_verified: false, post_type: 'public' });
       setIsWriting(false);
-      loadPosts(); // Reload posts after creating/updating
+      loadPosts();
     } catch (error) {
       console.error('Error saving post:', error);
     }
@@ -475,11 +504,6 @@ function App() {
                       </button>
                     </div>
                   )}
-                </div>
-                <div className="prose max-w-none">
-                  <div className="text-gray-300 leading-relaxed whitespace-pre-wrap">
-                    {post.content}
-                  </div>
                 </div>
               </article>
             ))
