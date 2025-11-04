@@ -408,29 +408,6 @@ function App() {
           </div>
         )}
 
-        {/* Tab Navigation */}
-        <div className="flex gap-4 mb-8 border-b border-gray-700">
-          <button
-            onClick={() => setActiveTab('admin')}
-            className={`px-6 py-3 font-medium transition-colors ${
-              activeTab === 'admin'
-                ? 'text-green-400 border-b-2 border-green-400'
-                : 'text-gray-400 hover:text-gray-300'
-            }`}
-          >
-            Admin Posts ({adminPosts.length})
-          </button>
-          <button
-            onClick={() => setActiveTab('public')}
-            className={`px-6 py-3 font-medium transition-colors ${
-              activeTab === 'public'
-                ? 'text-green-400 border-b-2 border-green-400'
-                : 'text-gray-400 hover:text-gray-300'
-            }`}
-          >
-            Public Posts ({publicPosts.length})
-          </button>
-        </div>
 
         {/* Posts List */}
         <div className="space-y-8">
@@ -451,7 +428,7 @@ function App() {
               </p>
             </div>
           ) : (
-            (activeTab === 'admin' ? filteredAdminPosts : filteredPublicPosts).map((post) => (
+            filteredPublicPosts.map((post) => (
               <article
                 key={post.id}
                 onClick={() => setSelectedPost(post)}
@@ -459,9 +436,12 @@ function App() {
               >
                 <div className="flex items-start justify-between mb-4">
                   <div className="flex-1">
-                    <h2 className="text-2xl font-bold text-gray-100 mb-3">
+                    <h2 className="text-2xl font-bold text-gray-100 mb-2">
                       {post.title}
                     </h2>
+                    <p className="text-gray-400 text-sm mb-3 line-clamp-2">
+                      {post.content.substring(0, 150)}...
+                    </p>
                     <div className="flex items-center gap-4 text-sm text-gray-400">
                       <div className="flex items-center gap-1">
                         <User className="w-4 h-4" />
