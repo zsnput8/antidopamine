@@ -3,7 +3,8 @@ import { PlusCircle, CreditCard as Edit3, Trash2, Calendar, User, Search, AlertT
 import { supabase, type Post } from './lib/supabase';
 import { PostDetail } from './components/PostDetail';
 import { checkRateLimit, recordLoginAttempt } from './utils/rateLimit';
-import { validatePostTitle, validatePostContent, validateAuthorName, detectXSSAttempt, detectSQLInjection, encodeForHTML } from './utils/security';
+import { validatePostTitle, validatePostContent, validateAuthorName, detectXSSAttempt, detectSQLInjection, encodeForHTML, validatePostInput } from './utils/security';
+import { generateFingerprint } from './utils/fingerprint';
 
 function App() {
   const [posts, setPosts] = useState<Post[]>([]);
@@ -19,11 +20,13 @@ function App() {
   const [loginError, setLoginError] = useState('');
   const [isLoggingIn, setIsLoggingIn] = useState(false);
   const [rateLimitInfo, setRateLimitInfo] = useState<string>('');
+  const [clientFingerprint, setClientFingerprint] = useState<string>('');
 
   const ADMIN_PASSWORD = 'aNCxap@YVchw1C0V!TzH#UfQQ6z4hG';
 
-  // Load posts from Supabase on component mount
+  // Load posts from Supabase on component mount and generate fingerprint
   useEffect(() => {
+    generateFingerprint().then(fp => setClientFingerprint(fp));
     loadPosts();
   }, []);
 
@@ -109,7 +112,8 @@ function App() {
             content: encodeForHTML(newPost.content),
             author: encodeForHTML(newPost.author),
             is_verified: newPost.is_verified,
-            post_type: newPost.post_type
+            post_type: newPost.post_type,
+            fingerprint: clientFingerprint
           }]);
 
         if (error) {
@@ -143,28 +147,7 @@ function App() {
   };
 
   const handleDelete = async (id: string) => {
-    if (!isAdminMode) {
-      alert('Only admins can delete posts');
-      return;
-    }
-
-    if (confirm('Are you sure you want to delete this post?')) {
-      try {
-        const { error } = await supabase
-          .from('posts')
-          .delete()
-          .eq('id', id);
-
-        if (error) {
-          console.error('Error deleting post:', error);
-          return;
-        }
-
-        loadPosts();
-      } catch (error) {
-        console.error('Error deleting post:', error);
-      }
-    }
+    alert('Post deletion is disabled for security reasons. Contact an administrator if you need to remove a post.');
   };
 
   const cancelEdit = () => {

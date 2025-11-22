@@ -108,3 +108,32 @@ export function rateLimit(key: string, maxAttempts: number, windowMs: number): b
 
   return true;
 }
+
+export function validatePostInput(title: string, content: string, author: string): { valid: boolean; errors: string[] } {
+  const errors: string[] = [];
+
+  if (!validatePostTitle(title)) {
+    errors.push('Title must be between 1 and 200 characters');
+  }
+
+  if (!validatePostContent(content)) {
+    errors.push('Content must be between 1 and 50000 characters');
+  }
+
+  if (!validateAuthorName(author)) {
+    errors.push('Author name must be between 1 and 100 characters');
+  }
+
+  if (detectXSSAttempt(title) || detectXSSAttempt(content) || detectXSSAttempt(author)) {
+    errors.push('Input contains potentially malicious content');
+  }
+
+  if (detectSQLInjection(title) || detectSQLInjection(content) || detectSQLInjection(author)) {
+    errors.push('Input contains potentially malicious SQL patterns');
+  }
+
+  return {
+    valid: errors.length === 0,
+    errors
+  };
+}
